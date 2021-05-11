@@ -32,6 +32,18 @@ if $facts['os']['selinux']['enabled'] {
     ensure  => installed,
     require => Yumrepo['candlepin'],
   }
+
+  # Workaround for https://github.com/theforeman/puppet-candlepin/issues/185#issuecomment-822284497
+  $tomcat_conf_files = [
+    '/usr/share/tomcat/conf/login.config',
+    '/usr/share/tomcat/conf/cert-users.properties',
+    '/usr/share/tomcat/conf/cert-roles.properties',
+    '/usr/share/tomcat/conf/conf.d/jaas.conf'
+  ]
+  file { $tomcat_conf_files:
+    ensure   => file,
+    require  => Package['candlepin-selinux'],
+  }
 }
 
 # Used to test which TLS versions are enabled
