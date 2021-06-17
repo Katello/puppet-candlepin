@@ -1,6 +1,5 @@
 Puppet::Type.type(:cpdb_create).provide(:cpdb_create) do
-
-  commands :cpdb => '/usr/share/candlepin/cpdb'
+  commands cpdb: '/usr/share/candlepin/cpdb'
 
   def create
     create_database
@@ -15,18 +14,18 @@ Puppet::Type.type(:cpdb_create).provide(:cpdb_create) do
 
   def create_database
     cpdb(
-      "--create",
-      "--schema-only",
+      '--create',
+      '--schema-only',
       "--dbhost=#{resource[:db_host]}",
       "--dbport=#{resource[:db_port]}",
       "--database=#{resource[:db_name]}#{resource[:ssl_options]}",
       "--user=#{resource[:db_user]}",
-      "--password=#{resource[:db_password]}"
+      "--password=#{resource[:db_password]}",
     )
   end
 
   def done_file
-    "/var/lib/candlepin/.puppet-candlepin-cpdb-create-done"
+    '/var/lib/candlepin/.puppet-candlepin-cpdb-create-done'
   end
 
   def write_done_file
@@ -34,5 +33,4 @@ Puppet::Type.type(:cpdb_create).provide(:cpdb_create) do
       file.write(Time.now)
     end
   end
-
 end

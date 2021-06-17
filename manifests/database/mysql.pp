@@ -1,7 +1,7 @@
 # Candlepin Database Setup using Mysql
 #
 # @api private
-class candlepin::database::mysql(
+class candlepin::database::mysql (
   $candlepin_conf_file = $candlepin::candlepin_conf_file,
   $db_dialect = 'org.hibernate.dialect.MySQLDialect',
   $db_quartz_dialect = 'org.quartz.impl.jdbcjobstore.StdJDBCDelegate',
@@ -16,7 +16,7 @@ class candlepin::database::mysql(
 ) {
   assert_private()
 
-  concat::fragment{'Mysql Database Configuration':
+  concat::fragment { 'Mysql Database Configuration':
     target  => $candlepin_conf_file,
     content => template('candlepin/_candlepin_database.conf.erb'),
   }

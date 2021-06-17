@@ -222,14 +222,12 @@ class candlepin (
   String $user = 'tomcat',
   String $group = 'tomcat',
 ) inherits candlepin::params {
-
   contain candlepin::service
 
   Anchor <| title == 'candlepin::repo' |> ->
   class { 'candlepin::install': } ~>
-  class { 'candlepin::config':  } ~>
-  class { 'candlepin::artemis':  } ~>
+  class { 'candlepin::config': } ~>
+  class { 'candlepin::artemis': } ~>
   class { "candlepin::database::${candlepin::db_type}": } ~>
   Class['candlepin::service']
-
 }

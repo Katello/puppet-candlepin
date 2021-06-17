@@ -1,7 +1,6 @@
 Puppet::Type.type(:cpdb_update).provide(:cpdb_update) do
-
-  commands :cpdb => '/usr/share/candlepin/cpdb'
-  commands :rpm => 'rpm'
+  commands cpdb: '/usr/share/candlepin/cpdb'
+  commands rpm: 'rpm'
 
   def create
     migrate_database
@@ -18,22 +17,22 @@ Puppet::Type.type(:cpdb_update).provide(:cpdb_update) do
   private
 
   def migrate_database
-    output = cpdb(
-      "--update",
+    cpdb(
+      '--update',
       "--dbhost=#{resource[:db_host]}",
       "--dbport=#{resource[:db_port]}",
       "--database=#{resource[:db_name]}#{resource[:ssl_options]}",
       "--user=#{resource[:db_user]}",
-      "--password=#{resource[:db_password]}"
+      "--password=#{resource[:db_password]}",
     )
   end
 
   def version_file
-    "/var/lib/candlepin/.puppet-candlepin-rpm-version"
+    '/var/lib/candlepin/.puppet-candlepin-rpm-version'
   end
 
   def update_version_file
-    File.open(version_file, "w") do |file|
+    File.open(version_file, 'w') do |file|
       file.write(candlepin_rpm_version)
     end
   end
@@ -45,5 +44,4 @@ Puppet::Type.type(:cpdb_update).provide(:cpdb_update) do
   def previous_candlepin_version
     File.read(version_file) if File.exist?(version_file)
   end
-
 end

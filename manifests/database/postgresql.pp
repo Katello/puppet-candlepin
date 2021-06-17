@@ -1,7 +1,7 @@
 # Candlepin Database Setup using Postgresql
 #
 # @api private
-class candlepin::database::postgresql(
+class candlepin::database::postgresql (
 
   $candlepin_conf_file     = $candlepin::candlepin_conf_file,
   $db_dialect              = 'org.hibernate.dialect.PostgreSQLDialect',
@@ -23,7 +23,7 @@ class candlepin::database::postgresql(
 ) {
   assert_private()
 
-  concat::fragment{'PostgreSQL Database Configuration':
+  concat::fragment { 'PostgreSQL Database Configuration':
     target  => $candlepin_conf_file,
     content => template('candlepin/_candlepin_database.conf.erb'),
   }

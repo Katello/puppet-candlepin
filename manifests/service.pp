@@ -18,8 +18,7 @@ class candlepin::service {
       require => [Package['wget'], Service['tomcat']],
       creates => '/var/lib/candlepin/cpinit_done',
       # timeout is roughly "wait" * "tries" from above
-      timeout =>  800,
+      timeout => 800,
     }
   }
-
 }
