@@ -37,7 +37,33 @@ class candlepin::config {
     ensure  => file,
     content => template('candlepin/tomcat/tomcat.conf.erb'),
     mode    => '0644',
-    owner   => 'root',
+    owner   => $candlepin::user,
     group   => $candlepin::group,
+  }
+
+  if $candlepin::manage_certificate_files {
+    file { $candlepin::ca_key:
+      mode  => '0640',
+      owner => 'root',
+      group => $candlepin::group,
+    }
+
+    file { $candlepin::ca_cert:
+      mode  => '0444',
+      owner => 'root',
+      group => $candlepin::group,
+    }
+
+    file { $candlepin::keystore_file:
+      mode  => '0640',
+      owner => 'root',
+      group => $candlepin::group,
+    }
+
+    file { $candlepin::truststore_file:
+      mode  => '0640',
+      owner => 'root',
+      group => $candlepin::group,
+    }
   }
 }

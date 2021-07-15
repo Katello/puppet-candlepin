@@ -166,6 +166,8 @@
 # @param group
 #   Primary group for the Candlepin user
 #
+# @param manage_certificate_files
+#   If true, the certificates permissions will be managed
 class candlepin (
   Boolean $manage_db = true,
   Boolean $init_db = true,
@@ -221,6 +223,7 @@ class candlepin (
   Stdlib::Absolutepath $broker_config_file = '/etc/candlepin/broker.xml',
   String $user = 'tomcat',
   String $group = 'tomcat',
+  Boolean $manage_certificate_files = $candlepin::params::manage_certificate_files,
 ) inherits candlepin::params {
 
   contain candlepin::service

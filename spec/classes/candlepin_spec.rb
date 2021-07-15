@@ -57,6 +57,33 @@ describe 'candlepin' do
           ])
         end
 
+        it do
+          is_expected.to contain_file('/etc/candlepin/certs/candlepin-ca.key').
+            with_group('tomcat').
+            with_mode('0640').
+            that_notifies('Service[tomcat]')
+        end
+
+        it do
+          is_expected.to contain_file('/etc/candlepin/certs/candlepin-ca.crt').
+            with_mode('0444').
+            that_notifies('Service[tomcat]')
+        end
+
+        it do
+          is_expected.to contain_file('/etc/candlepin/certs/keystore').
+            with_group('tomcat').
+            with_mode('0640').
+            that_notifies('Service[tomcat]')
+        end
+
+        it do
+          is_expected.to contain_file('/etc/candlepin/certs/truststore').
+            with_group('tomcat').
+            with_mode('0640').
+            that_notifies('Service[tomcat]')
+        end
+
         it { is_expected.to contain_file('/usr/share/tomcat/conf/login.config') }
         it { is_expected.to contain_file('/usr/share/tomcat/conf/cert-roles.properties') }
         it { is_expected.to contain_file('/usr/share/tomcat/conf/conf.d/jaas.conf') }
@@ -284,6 +311,18 @@ describe 'candlepin' do
         it { is_expected.to compile.with_all_deps }
         it { is_expected.to contain_exec('notification').that_notifies('Service[tomcat]') }
         it { is_expected.to contain_exec('dependency').that_requires('Service[tomcat]') }
+      end
+
+      describe 'with manage_certificate_files false' do
+        let(:params) do
+          {manage_certificate_files: false}
+        end
+
+        it { is_expected.to compile.with_all_deps }
+        it { is_expected.not_to contain_file('/etc/candlepin/certs/candlepin-ca.key') }
+        it { is_expected.not_to contain_file('/etc/candlepin/certs/candlepin-ca.crt') }
+        it { is_expected.not_to contain_file('/etc/candlepin/certs/keystore') }
+        it { is_expected.not_to contain_file('/etc/candlepin/certs/truststore') }
       end
     end
   end
