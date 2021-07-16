@@ -4,6 +4,10 @@
 class candlepin::config {
   assert_private()
 
+  contain candlepin::certificates
+
+  $tomcat_config_dir = '/etc/tomcat'
+
   user { $candlepin::user:
     ensure => present,
     gid    => $candlepin::group,
@@ -25,7 +29,7 @@ class candlepin::config {
     group => $candlepin::group,
   }
 
-  file { '/etc/tomcat/server.xml':
+  file { "${tomcat_config_dir}/server.xml":
     ensure  => file,
     content => template('candlepin/tomcat/server.xml.erb'),
     mode    => '0644',
@@ -33,7 +37,7 @@ class candlepin::config {
     group   => 'root',
   }
 
-  file { '/etc/tomcat/tomcat.conf':
+  file { "${tomcat_config_dir}/tomcat.conf":
     ensure  => file,
     content => template('candlepin/tomcat/tomcat.conf.erb'),
     mode    => '0644',

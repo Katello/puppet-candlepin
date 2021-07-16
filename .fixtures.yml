@@ -2,6 +2,7 @@ fixtures:
   repositories:
     stdlib:     'https://github.com/puppetlabs/puppetlabs-stdlib.git'
     extlib:     'https://github.com/voxpupuli/puppet-extlib'
+    certs:      'https://github.com/theforeman/puppet-certs'
     concat:     'https://github.com/puppetlabs/puppetlabs-concat'
     postgresql: 'https://github.com/puppetlabs/puppetlabs-postgresql.git'
     selinux_core:

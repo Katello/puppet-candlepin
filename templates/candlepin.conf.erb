@@ -19,11 +19,11 @@ candlepin.auth.oauth.consumer.<%= scope['candlepin::oauth_key'] %>.secret=<%= sc
 module.config.adapter_module=<%= scope['candlepin::adapter_module'] %>
 <%- end -%>
 
-candlepin.ca_key=<%= scope['candlepin::ca_key'] %>
-candlepin.ca_cert=<%= scope['candlepin::ca_cert'] %>
-candlepin.crl.file=<%= scope['candlepin::crl_file'] %>
-<% unless [nil, :undefined, :undef].include?(scope['candlepin::ca_key_password']) -%>
-candlepin.ca_key_password=<%= scope['candlepin::ca_key_password'] %>
+candlepin.ca_key=<%= scope['candlepin::certificates::ca_key'] %>
+candlepin.ca_cert=<%= scope['candlepin::certificates::ca_cert'] %>
+candlepin.crl.file=<%= scope['candlepin::certificates::crl_file'] %>
+<% unless [nil, :undefined, :undef].include?(scope['candlepin::certificates::ca_key_password']) -%>
+candlepin.ca_key_password=<%= scope['candlepin::certificates::ca_key_password'] %>
 <%- end -%>
 
 # Quartz schedule notation for how often to run the ExpiredPoolsJob

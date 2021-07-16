@@ -50,17 +50,8 @@
 # @param env_filtering_enabled
 #   If subscription filtering is done on a per environment basis
 #
-# @param keystore_file
-#   Tomcat keystore file to use
-#
 # @param keystore_password
 #   Password for keystore being used with Tomcat
-#
-# @param keystore_type
-#   Keystore type
-#
-# @param truststore_file
-#   Truststore file to use for Tomcat and Artemis
 #
 # @param truststore_password
 #   Password for truststore being used with Tomcat and Artemis
@@ -70,6 +61,12 @@
 #
 # @param ca_cert
 #   CA certificate file to use
+#
+# @param tomcat_ssl_cert
+#   The certificate to use for Tomcat server
+#
+# @param tomcat_ssl_key
+#   The private key to use for Tomcat server
 #
 # @param ca_key_password
 #   CA key password
@@ -157,6 +154,9 @@
 # @param artemis_client_dn
 #   Full DN for the client certificate used to talk to Artemis
 #
+# @param artemis_client_certificate
+#   Path to the client certificate used to talk to Artemis
+#
 # @param broker_config_file
 #   Config file for Artemis
 #
@@ -183,13 +183,12 @@ class candlepin (
   String $oauth_key = 'candlepin',
   String $oauth_secret = 'candlepin',
   Boolean $env_filtering_enabled = true,
-  Stdlib::Absolutepath $keystore_file = '/etc/candlepin/certs/keystore',
-  Optional[String] $keystore_password = undef,
-  String $keystore_type = 'PKCS12',
-  Stdlib::Absolutepath $truststore_file = '/etc/candlepin/certs/truststore',
-  Optional[String] $truststore_password = undef,
-  Stdlib::Absolutepath $ca_key = '/etc/candlepin/certs/candlepin-ca.key',
-  Stdlib::Absolutepath $ca_cert = '/etc/candlepin/certs/candlepin-ca.crt',
+  Optional[String] $keystore_password = $candlepin::params::keystore_password,
+  Optional[String] $truststore_password = $candlepin::params::truststore_password,
+  Stdlib::Absolutepath $ca_key = undef,
+  Stdlib::Absolutepath $ca_cert = undef,
+  Stdlib::Absolutepath $tomcat_ssl_cert = undef,
+  Stdlib::Absolutepath $tomcat_ssl_key = undef,
   Optional[String] $ca_key_password = undef,
   Array[String] $ciphers = $candlepin::params::ciphers,
   Array[String] $tls_versions = ['1.2'],
@@ -218,12 +217,19 @@ class candlepin (
   Stdlib::Host $artemis_host = 'localhost',
   Stdlib::Port $artemis_port = 61613,
   Variant[Deferred, String] $artemis_client_dn = 'CN=ActiveMQ Artemis Client, OU=Artemis, O=ActiveMQ, L=AMQ, ST=AMQ, C=AMQ',
+  Stdlib::Absolutepath $artemis_client_certificate = undef,
   Stdlib::Absolutepath $broker_config_file = '/etc/candlepin/broker.xml',
   String $user = 'tomcat',
   String $group = 'tomcat',
 ) inherits candlepin::params {
 
   contain candlepin::service
+
+  $truststore = '/etc/candlepin/certs/truststore'
+  $truststore_password_path = '/etc/candlepin/certs/truststore_password-file'
+
+  $keystore = '/etc/candlepin/certs/keystore'
+  $keystore_password_path = '/etc/candlepin/certs/keystore_password-file'
 
   Anchor <| title == 'candlepin::repo' |> ->
   class { 'candlepin::install': } ~>

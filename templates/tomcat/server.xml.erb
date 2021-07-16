@@ -80,10 +80,10 @@
                clientAuth="want"
                sslProtocol="<%= scope['::candlepin::tls_versions'].map { |version| "TLSv#{version}"}.join(",") %>"
                sslEnabledProtocols="<%= scope['::candlepin::tls_versions'].map { |version| "TLSv#{version}"}.join(",") %>"
-               keystoreFile="<%= scope['::candlepin::keystore_file'] %>"
+               keystoreFile="<%= scope['::candlepin::keystore'] %>"
                keystorePass="<%= scope['::candlepin::keystore_password'] %>"
                keystoreType="<%= scope['::candlepin::keystore_type'] %>"
-               truststoreFile="<%= scope['::candlepin::truststore_file'] %>"
+               truststoreFile="<%= scope['::candlepin::truststore'] %>"
                truststorePass="<%= scope['::candlepin::truststore_password'] %>"
                ciphers="<%= scope['::candlepin::ciphers'].join(",\n                    ") %>" />
 

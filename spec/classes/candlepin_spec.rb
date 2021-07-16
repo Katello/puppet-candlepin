@@ -7,7 +7,14 @@ describe 'candlepin' do
 
       describe 'default parameters' do
         let :params do
-          {db_password: 'testpassword'}
+          {
+            db_password: 'testpassword',
+            truststore_password: 'changeme',
+            ca_cert: '/etc/pki/ca.crt',
+            ca_key: '/etc/pki/ca.key',
+            tomcat_ssl_cert: '/etc/pki/tomcat.crt',
+            tomcat_ssl_key: '/etc/pki/tomcat.key',
+          }
         end
 
         it { is_expected.to compile.with_all_deps }
@@ -69,7 +76,30 @@ describe 'candlepin' do
 
         it do
           is_expected.to contain_file('/etc/candlepin/broker.xml').
-            with_content(/^            <acceptor name="stomp">tcp:\/\/localhost:61613\?protocols=STOMP;useEpoll=false;sslEnabled=true;trustStorePath=\/etc\/candlepin\/certs\/truststore;trustStorePassword=;keyStorePath=\/etc\/candlepin\/certs\/keystore;keyStorePassword=;needClientAuth=true<\/acceptor>/)
+            with_content(/^            <acceptor name="stomp">tcp:\/\/localhost:61613\?protocols=STOMP;useEpoll=false;sslEnabled=true;trustStorePath=\/etc\/candlepin\/certs\/truststore;trustStorePassword=changeme;keyStorePath=\/etc\/candlepin\/certs\/keystore;keyStorePassword=;needClientAuth=true<\/acceptor>/)
+        end
+
+        it do
+          is_expected.to contain_truststore('/etc/candlepin/certs/truststore')
+            .with_ensure('present')
+            .with_owner('root')
+            .with_group('tomcat')
+            .with_mode('0640')
+            .with_password_file('/etc/candlepin/certs/truststore_password-file')
+        end
+
+        it do
+          is_expected.to contain_truststore_certificate('/etc/candlepin/certs/truststore:ca')
+            .with_ensure('present')
+            .with_password_file('/etc/candlepin/certs/truststore_password-file')
+            .with_certificate('/etc/candlepin/certs/candlepin-ca.crt')
+        end
+
+        it do
+          is_expected.to contain_truststore_certificate('/etc/candlepin/certs/truststore:artemis-client')
+            .with_ensure('present')
+            .with_password_file('/etc/candlepin/certs/truststore_password-file')
+            .with_certificate('/etc/candlepin/certs/artemis-client.crt')
         end
 
         # database

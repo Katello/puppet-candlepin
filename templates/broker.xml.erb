@@ -12,7 +12,7 @@
 
         <acceptors>
             <acceptor name="in-vm">vm://0</acceptor>
-            <acceptor name="stomp">tcp://<%= scope['candlepin::artemis_host'] %>:<%= scope['candlepin::artemis_port'] %>?protocols=STOMP;useEpoll=false;sslEnabled=true;trustStorePath=<%= scope['candlepin::truststore_file'] %>;trustStorePassword=<%= scope['candlepin::truststore_password'] %>;keyStorePath=<%= scope['candlepin::keystore_file'] %>;keyStorePassword=<%= scope['candlepin::keystore_password'] %>;needClientAuth=true</acceptor>
+            <acceptor name="stomp">tcp://<%= scope['candlepin::artemis_host'] %>:<%= scope['candlepin::artemis_port'] %>?protocols=STOMP;useEpoll=false;sslEnabled=true;trustStorePath=<%= scope['candlepin::truststore'] %>;trustStorePassword=<%= scope['candlepin::truststore_password'] %>;keyStorePath=<%= scope['candlepin::keystore'] %>;keyStorePassword=<%= scope['candlepin::keystore_password'] %>;needClientAuth=true</acceptor>
         </acceptors>
 
         <security-enabled>true</security-enabled>
