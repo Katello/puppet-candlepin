@@ -7,7 +7,10 @@ describe 'candlepin' do
 
       describe 'default parameters' do
         let :params do
-          {db_password: 'testpassword'}
+          {
+            db_password: 'testpassword',
+            artemis_client_dn: "CN=ActiveMQ Artemis Client, OU=Artemis, O=ActiveMQ, L=AMQ, ST=AMQ, C=AMQ",
+          }
         end
 
         it { is_expected.to compile.with_all_deps }
@@ -60,10 +63,6 @@ describe 'candlepin' do
         it { is_expected.to contain_file('/usr/share/tomcat/conf/login.config') }
         it { is_expected.to contain_file('/usr/share/tomcat/conf/cert-roles.properties') }
         it { is_expected.to contain_file('/usr/share/tomcat/conf/conf.d/jaas.conf') }
-        it do
-          is_expected.to contain_file('/usr/share/tomcat/conf/cert-users.properties').
-            with_content("katelloUser=CN=ActiveMQ Artemis Client, OU=Artemis, O=ActiveMQ, L=AMQ, ST=AMQ, C=AMQ\n")
-        end
 
         it { is_expected.to contain_file('/etc/candlepin/broker.xml') }
 
@@ -284,6 +283,37 @@ describe 'candlepin' do
         it { is_expected.to compile.with_all_deps }
         it { is_expected.to contain_exec('notification').that_notifies('Service[tomcat]') }
         it { is_expected.to contain_exec('dependency').that_requires('Service[tomcat]') }
+      end
+
+      context 'with artemis_client_dn' do
+        let :params do
+          {
+            artemis_client_dn: 'CN=ActiveMQ Artemis Client, OU=Artemis, O=ActiveMQ, L=AMQ, ST=AMQ, C=AMQ'
+          }
+        end
+
+        it { is_expected.to compile.with_all_deps }
+        it do
+          is_expected.to contain_file('/usr/share/tomcat/conf/cert-users.properties').
+            with_content("katelloUser=CN=ActiveMQ Artemis Client, OU=Artemis, O=ActiveMQ, L=AMQ, ST=AMQ, C=AMQ\n")
+        end
+      end
+
+      context 'with artemis_client_certificate' do
+        let :params do
+          {
+            artemis_client_certificate_user_map: {'/etc/pki/client_certificate.crt' => 'katelloUser'}
+          }
+        end
+
+        it { is_expected.to compile.with_all_deps }
+        it do
+          is_expected.to contain_file('/etc/candlepin/certs/artemis/katelloUser.crt').
+            with_source('/etc/pki/client_certificate.crt').
+            with_owner('tomcat').
+            with_group('tomcat').
+            with_mode('0640')
+        end
       end
     end
   end

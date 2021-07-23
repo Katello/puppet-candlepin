@@ -1,0 +1,14 @@
+{
+  "name": "test-certificates",
+  "version": "0.0.1",
+  "author": "theforeman",
+  "summary": "For testing purposes only",
+  "license": "GPL-3.0+",
+  "source": "test",
+  "dependencies": [
+    {
+      "name": "puppetlabs-stdlib",
+      "version_requirement": ">= 4.25.0 < 8.0.0"
+    }
+  ]
+}

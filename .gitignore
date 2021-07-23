@@ -29,7 +29,9 @@ vendor/
 .ruby-*
 
 ## rspec
-spec/fixtures/
+spec/fixtures/modules/*
+spec/fixtures/manifests
+!spec/fixtures/modules/certificates
 junit/
 
 ## Puppet module

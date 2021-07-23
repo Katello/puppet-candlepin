@@ -157,6 +157,9 @@
 # @param artemis_client_dn
 #   Full DN for the client certificate used to talk to Artemis
 #
+# @param artemis_client_certificate_user_map
+#   Mapping of certificate to Artemis user for configuring roles in Artemis.
+#
 # @param broker_config_file
 #   Config file for Artemis
 #
@@ -217,13 +220,18 @@ class candlepin (
   String $certificate_revocation_list_task_schedule = '0 0 0 1 1 ?',
   Stdlib::Host $artemis_host = 'localhost',
   Stdlib::Port $artemis_port = 61613,
-  Variant[Deferred, String] $artemis_client_dn = 'CN=ActiveMQ Artemis Client, OU=Artemis, O=ActiveMQ, L=AMQ, ST=AMQ, C=AMQ',
+  Optional[Variant[Deferred, String]] $artemis_client_dn = undef,
+  Optional[Hash[String[1], String[1]]] $artemis_client_certificate_user_map = undef,
   Stdlib::Absolutepath $broker_config_file = '/etc/candlepin/broker.xml',
   String $user = 'tomcat',
   String $group = 'tomcat',
 ) inherits candlepin::params {
 
   contain candlepin::service
+
+  if $artemis_client_dn and $artemis_client_certificate_user_map {
+    fail('Both $artemis_client_dn and $artemis_client_certificate_user_map cannot be supplied. Please pass only one.')
+  }
 
   Anchor <| title == 'candlepin::repo' |> ->
   class { 'candlepin::install': } ~>
